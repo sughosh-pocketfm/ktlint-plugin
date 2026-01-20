@@ -1,0 +1,76 @@
+<idea-plugin>
+    <id>com.pocketfm.ktlintv2</id>
+    <name>Ktlint V2</name>
+    <vendor email="support@pocketfm.com" url="https://pocketfm.com">PocketFM</vendor>
+
+    <description><![CDATA[
+        <p>A ktlint plugin for IntelliJ IDEA and Android Studio that properly handles custom rule JARs without class loader conflicts.</p>
+        
+        <h3>Features</h3>
+        <ul>
+            <li>Real-time Kotlin linting as you type</li>
+            <li>Support for multiple custom rule JARs</li>
+            <li>Support for compose-rules (nlopez)</li>
+            <li>Quick fixes for common issues</li>
+            <li>Format on save (optional)</li>
+            <li>Configurable rule sets</li>
+        </ul>
+        
+        <h3>Supported Rule Sets</h3>
+        <ul>
+            <li>ktlint standard rules</li>
+            <li>PocketFM custom rules (linter.jar)</li>
+            <li>compose-rules (nlopez)</li>
+            <li>Any custom ktlint rule JAR</li>
+        </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <resource-bundle>messages.KtlintV2Bundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- External Annotator for real-time linting -->
+        <externalAnnotator 
+            language="kotlin" 
+            implementationClass="com.pocketfm.ktlintv2.KtlintAnnotator"/>
+        
+        <!-- Settings UI -->
+        <projectConfigurable
+            parentId="tools"
+            instance="com.pocketfm.ktlintv2.ui.KtlintV2Configurable"
+            id="com.pocketfm.ktlintv2.settings"
+            key="settings.displayName"
+            nonDefaultProject="true"/>
+        
+        <!-- Notification group -->
+        <notificationGroup 
+            id="ktlintv2" 
+            displayType="BALLOON"
+            key="notification.group.name"/>
+    </extensions>
+
+    <projectListeners>
+        <listener
+            class="com.pocketfm.ktlintv2.listeners.KtlintConfigListener"
+            topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </projectListeners>
+
+    <actions>
+        <!-- Format file action -->
+        <action 
+            id="com.pocketfm.ktlintv2.FormatAction"
+            class="com.pocketfm.ktlintv2.actions.FormatAction">
+            <add-to-group group-id="CodeFormatGroup" anchor="after" relative-to-action="ReformatCode"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift L"/>
+        </action>
+        
+        <!-- Lint file action -->
+        <action 
+            id="com.pocketfm.ktlintv2.LintAction"
+            class="com.pocketfm.ktlintv2.actions.LintAction">
+            <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="ReformatCode"/>
+        </action>
+    </actions>
+</idea-plugin>
