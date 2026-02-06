@@ -28,6 +28,11 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.kotlin</depends>
 
+    <!-- K2 mode compatibility - this plugin works with both K1 and K2 modes -->
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true" supportsK1="true"/>
+    </extensions>
+
     <resource-bundle>messages.KtlintV2Bundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
